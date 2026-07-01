@@ -49,3 +49,19 @@ chomp(my @clean = grep /^\w+$/, @raw);
 ## Constraint (non-negotiable)
 
 All transformations must strictly preserve observable behavior.
+
+## Pitfall: Dereferencing the result of an indexer
+
+Any expression that may yield `undef` (empty `grep`/`map`, out-of-range slice, sub returning `()`, optional chain) must not be immediately followed by `->{...}`, `->[...]`, or `->(...)` — `undef->X` dies. The original readable form handled the empty case and must be preserved.
+
+```perl
+# Unsafe (do NOT write)
+my $v = (grep { /foo/ } @list)[0]{key};
+my $v = (func())[0][0];
+
+# Safe
+my ($m) = EXPR;                  # bind — empty → $m=undef, $m->X still dies, so:
+my $v = ($m //= default) && $m->{key};
+# or:  my $v = (EXPR)[0] ? (EXPR)[0]{key} : default;   # explicit guard
+```
+
