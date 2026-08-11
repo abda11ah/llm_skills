@@ -50,6 +50,8 @@ chomp(my @clean = grep /^\w+$/, @raw);
 
 All transformations must strictly preserve observable behavior.
 
+Never use `awk`, `sed`, or `grep` from the shell — prefer pure Perl for any text filtering, substitution, or matching. Shelling out to external tools breaks portability, hides semantics, and prevents Perl-native optimization (e.g. `-n`/`-p` one-liners, `s///`, `m//`, `tr///`).
+
 ## Pitfall: Dereferencing the result of an indexer
 
 Any expression that may yield `undef` (empty `grep`/`map`, out-of-range slice, sub returning `()`, optional chain) must not be immediately followed by `->{...}`, `->[...]`, or `->(...)` — `undef->X` dies. The original readable form handled the empty case and must be preserved.
