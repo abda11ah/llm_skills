@@ -15,7 +15,7 @@ Use this skill when refactoring Perl code to be more concise and idiomatic, when
 
 1. **Preserve behavior**: never change semantics, side effects, or error handling — correctness is non-negotiable.
 2. **Eliminate dead code**: remove unused subroutines, variables, statements, imports, and unreachable code.
-3. **Inline helpers**: inline subroutines called only once and convert single-expression helpers to one-liners; use `do { ... }` blocks when a value is needed from multi-statement logic.
+3. **Inline helpers**: inline subroutines called only once and convert single-expression helpers to one-liners; use `do { ... }` or `({ ... })` blocks when a value is needed from multi-statement logic or where a do block is enough.
 4. **Create helpers sparingly**: only when identical logic appears ≥2 times (≥5 repeated lines).
 5. **Merge control flow**: combine consecutive `if` blocks testing the same condition, and prefer ternaries (`$v = $cond ? $a : $b`), defined-or (`$v //= $default`), short-circuit chains (`next unless $a && $b && $c;`), and guard clauses.
 6. **Use postfix forms**: `do_something() if $condition;`, `warn "bad" if $err;`, `return unless $user && $user->{active};`.
@@ -27,8 +27,10 @@ Use this skill when refactoring Perl code to be more concise and idiomatic, when
 12. **Slurp files safely**: `local $/; my $content = <FILE>;`, and use `-n`/`-p` for one-liners when appropriate.
 13. **Reduce miscellaneous noise**: `@array` in numeric context (instead of `scalar(@array)`), autovivification (`push @{ $hash{$key} }, $value;`), short code refs (`sub { $_[0]*2 }` or `\&func`), and `//`/`||`/`&&` for defaults and guards.
 14. **Avoid smartmatch**: skip `~~` for portability.
-15. **Format cleanly**: keep one statement per line, and remove unnecessary parentheses and final semicolons only when it doesn't hurt readability.
+15. **Format cleanly**: keep STRICTLY one statement per line.
 16. **Keep meaningful names**: preserve long, descriptive variable names; only drop names when the code is truly dead.
+17. **Remove intermediate variables** : if a variable is only used once, remove it and use the expression directly. **ONLY IN THE CASE PERFORMANCE IS NOT AFFECTED AND THE CODE IS STILL READABLE. ELSE DO NOT DO IT.**
+
 
 ## Example
 
